@@ -1,50 +1,69 @@
 import pandas as pd
+import pickle
+
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-from sklearn.svm import LinearSVC
-import pickle
-from preprocess import preprocess_text
+from sklearn.metrics import accuracy_score, classification_report
 
-# Charger le dataset
-df = pd.read_csv("../data/spam.csv")
+from preprocess import clean_text
 
-# Prétraitement
-df['message'] = df['message'].apply(preprocess_text)
+# ===============================
+# 1. Charger les données
+# ===============================
+df = pd.read_csv("data/spam_clean.csv")
 
-# Train/Test split
-X = df['message']
-y = df['label']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Supprimer NaN et messages trop courts
+df = df.dropna(subset=["Message", "Category"])
+df["Message"] = df["Message"].astype(str)
+df = df[df["Message"].str.strip().str.len() > 3]
 
-# TF-IDF
-vectorizer = TfidfVectorizer()
+# ===============================
+# 2. Prétraitement
+# ===============================
+X = df["Message"].apply(clean_text)
+y = df["Category"]
+
+# ===============================
+# 3. Train / Test split
+# ===============================
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# ===============================
+# 4. TF-IDF (optimisé)
+# ===============================
+vectorizer = TfidfVectorizer(
+    max_features=8000,
+    ngram_range=(1, 2),
+    min_df=2,
+    max_df=0.95
+)
+
 X_train_vect = vectorizer.fit_transform(X_train)
 X_test_vect = vectorizer.transform(X_test)
 
-# Modèles
-models = {
-    "Naive Bayes": MultinomialNB(),
-    "Logistic Regression": LogisticRegression(max_iter=1000),
-    "SVM": LinearSVC()
-}
+# ===============================
+# 5. Modèle Logistic Regression
+# ===============================
+model = LogisticRegression(max_iter=2000, class_weight="balanced")
+model.fit(X_train_vect, y_train)
 
-# Entraînement et sauvegarde
-best_model = None
-best_acc = 0
+# ===============================
+# 6. Évaluation rapide
+# ===============================
+y_pred = model.predict(X_test_vect)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
 
-for name, model in models.items():
-    model.fit(X_train_vect, y_train)
-    acc = model.score(X_test_vect, y_test)
-    print(f"{name} Accuracy : {acc:.4f}")
-    if acc > best_acc:
-        best_acc = acc
-        best_model = model
+# ===============================
+# 7. Sauvegarde
+# ===============================
+with open("models/spam_model.pkl", "wb") as f:
+    pickle.dump(model, f)
 
-# Sauvegarder le meilleur modèle et le vectorizer
-with open("../models/best_model.pkl", "wb") as f:
-    pickle.dump(best_model, f)
-
-with open("../models/vectorizer.pkl", "wb") as f:
+with open("models/tfidf_vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
+
+print("Modèle et vectorizer sauvegardés")

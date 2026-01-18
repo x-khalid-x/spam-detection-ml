@@ -1,6 +1,15 @@
+# Python
 __pycache__/
-.ipynb_checkpoints/
-snapshots/
-.env
-models/*.pkl
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+
+# VS Code
+.vscode/
+.snapshots/
+
+# OS
+.DS_Store
 

@@ -1,27 +1,44 @@
+import pandas as pd
 import pickle
-from sklearn.metrics import classification_report, confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, classification_report
+from preprocess import clean_text
 
-# Charger modèle et vectorizer
-with open("../models/best_model.pkl", "rb") as f:
+# ===============================
+# 1. Charger les données
+# ===============================
+df = pd.read_csv("data/spam_clean.csv")
+
+# Sécurité ABSOLUE NLP
+df = df.dropna(subset=["Message", "Category"])
+df["Message"] = df["Message"].astype(str)
+df = df[df["Message"].str.strip().str.len() > 3]
+
+# ===============================
+# 2. Nettoyage (OBLIGATOIRE)
+# ===============================
+X_clean = df["Message"].apply(clean_text)
+y = df["Category"]
+
+# ===============================
+# 3. Charger modèle & vectorizer
+# ===============================
+with open("models/spam_model.pkl", "rb") as f:
     model = pickle.load(f)
-with open("../models/vectorizer.pkl", "rb") as f:
+
+with open("models/tfidf_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
 
-# Charger test set (X_test et y_test)
-import pandas as pd
-df = pd.read_csv("../data/spam_clean.csv")
-X_test = df['message'].fillna("")
-y_test = df['label']
+# ===============================
+# 4. Vectorisation + Prédiction
+# ===============================
+X_vect = vectorizer.transform(X_clean)
+preds = model.predict(X_vect)
 
-X_test_vect = vectorizer.transform(X_test)
-y_pred = model.predict(X_test_vect)
+# ===============================
+# 5. Résultats
+# ===============================
+print("Confusion Matrix:\n")
+print(confusion_matrix(y, preds))
 
-# Rapport
-print(classification_report(y_test, y_pred))
-
-# Matrice de confusion
-cm = confusion_matrix(y_test, y_pred)
-sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=['ham','spam'], yticklabels=['ham','spam'])
-plt.show()
+print("\nClassification Report:\n")
+print(classification_report(y, preds))
