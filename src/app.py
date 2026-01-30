@@ -1,30 +1,19 @@
 import streamlit as st
 import pickle
 from preprocess import clean_text
-
-# ===============================
 # Charger modèle & vectorizer
-# ===============================
 with open("models/spam_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 with open("models/tfidf_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
-
-# ===============================
 # Initialiser historique si non existant
-# ===============================
 if "history" not in st.session_state:
     st.session_state.history = []
-
-# ===============================
 # Interface
-# ===============================
 st.title("📩 Spam Detection (English Only)")
 st.write("Enter one or multiple messages (one per line).")
-
 text = st.text_area("Messages")
-
 if st.button("Analyze"):
     if text.strip() == "":
         st.warning("Please enter at least one message.")
@@ -43,7 +32,6 @@ if st.button("Analyze"):
             probs = [[1 - p, p] for p in probs]
 
         preds = model.predict(vect)
-
         # Ajouter au history
         for i, msg in enumerate(messages):
             st.session_state.history.append({
@@ -52,9 +40,7 @@ if st.button("Analyze"):
                 "probability": probs[i][list(model.classes_).index("spam")]
             })
 
-# ===============================
 # Affichage de l'historique
-# ===============================
 if st.session_state.history:
     st.subheader("📝 History of analyzed messages")
     for item in reversed(st.session_state.history):  # afficher le plus récent en premier

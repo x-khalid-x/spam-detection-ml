@@ -2,13 +2,10 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
-
-# 📌 Forcer le téléchargement dans Streamlit Cloud
+# Forcer le téléchargement dans Streamlit Cloud
 nltk.download("stopwords", quiet=True)
-
 stop_words = set(stopwords.words("english"))
 stemmer = PorterStemmer()
-
 def clean_text(text):
     text = text.lower()
     text = re.sub(r"[^a-zA-Z\s]", " ", text)
