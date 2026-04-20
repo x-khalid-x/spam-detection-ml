@@ -26,23 +26,23 @@ Une application web interactive a été développée avec **Streamlit** et dépl
 spam-detection-ml/
 │
 ├── data/
-│   ├── spam.csv                # Dataset original
-│   └── spam_clean.csv          # Dataset nettoyé
+│   ├── spam.csv            # Dataset original
+│   └── spam_clean.csv      # Dataset nettoyé
 │
 ├── models/
-│   ├── spam_model.pkl          # Modèle entraîné
-│   └── tfidf_vectorizer.pkl    # Vectorizer sauvegardé
+│   ├── spam_model.pkl      # Modèle entraîné
+│   └── tfidf_vectorizer.pkl
 │
 ├── notebooks/
-│   ├── exploration.ipynb       # Analyse exploratoire
+│   ├── exploration.ipynb   # Analyse exploratoire
 │   ├── preprocessing.ipynb
 │   └── modeling.ipynb
 │
 ├── src/
-│   ├── preprocess.py           # Fonctions de nettoyage du texte
-│   ├── train.py                # Entraînement du modèle
-│   ├── evaluate.py             # Évaluation du modèle
-│   └── app.py                  # Application Streamlit
+│   ├── preprocess.py      # Fonctions de nettoyage du texte
+│   ├── train.py           # Entraînement du modèle
+│   ├── evaluate.py        # Évaluation du modèle
+│   └── app.py             # Application Streamlit
 │
 ├── requirements.txt
 ├── README.md
@@ -54,7 +54,7 @@ spam-detection-ml/
 ## 📊 Dataset
 
 - **Nom :** spam.csv
-- **Type :** Messages SMS
+- **Type :** messages SMS
 - **Langue :** Anglais
 - **Classes :** `spam` / `ham`
 
@@ -101,12 +101,10 @@ Le modèle est entraîné sur les données prétraitées et sauvegardé pour une
 
 Les métriques utilisées :
 
-| Métrique | Description |
-|----------|-------------|
-| Accuracy | Taux global de bonnes prédictions |
-| Precision | Proportion de vrais positifs parmi les prédictions positives |
-| Recall | Proportion de vrais positifs détectés |
-| F1-score | Moyenne harmonique de Precision et Recall |
+- Accuracy
+- Precision
+- Recall
+- F1-score
 
 Le modèle donne de bons résultats sur les données de test et généralise correctement.
 
@@ -117,8 +115,9 @@ Le modèle donne de bons résultats sur les données de test et généralise cor
 L'application permet :
 
 - D'analyser un ou plusieurs messages (un par ligne)
-- D'afficher la prédiction (Spam / Ham) avec la probabilité associée
-- De visualiser des statistiques en temps réel (graphiques)
+- D'afficher :
+  - La prédiction (Spam / Ham)
+  - La probabilité associée
 - De conserver un historique des messages analysés
 
 ---
@@ -137,12 +136,6 @@ streamlit run src/app.py
 
 ## 🧰 Technologies utilisées
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![NLTK](https://img.shields.io/badge/NLTK-154F5B?style=flat)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
-
 - Python
 - Pandas, NumPy
 - Scikit-learn
@@ -154,7 +147,7 @@ streamlit run src/app.py
 
 ## ⚠️ Limites du projet
 
-- Le modèle fonctionne uniquement pour des messages en **anglais**
+- Le modèle fonctionne uniquement pour des messages en anglais
 - Les messages en français ou autres langues peuvent être mal classés
 - Le dataset est relativement limité
 
@@ -163,15 +156,20 @@ streamlit run src/app.py
 ## 🔮 Améliorations possibles
 
 - Support multilingue
-- Ajout d'un seuil de détection personnalisable
+- Ajout d'un seuil personnalisable
 - Comparaison avec d'autres modèles (SVM, Naive Bayes)
 - Analyse des faux positifs / faux négatifs
 - Déploiement via API (FastAPI)
 
 ---
 
-## 👨‍🎓 Auteur
-
-**Khalid Farah**
+## 👨‍🎓 Auteurs
 
 Projet académique en Machine Learning & NLP
+
+| Nom | Prénom |
+|-----|--------|
+| Chliyahe | Khalid |
+| Sanhaji | Farah |
+| Bader | Niama |
+| Chqir | Manal |
