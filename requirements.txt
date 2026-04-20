@@ -5,5 +5,5 @@ scikit-learn
 nltk
 scipy
 openai
-
+plotly
 
